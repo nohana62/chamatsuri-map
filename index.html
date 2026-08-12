@@ -53,17 +53,15 @@
   .card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:11px 12px;margin-bottom:10px;}
   .card h3{margin:0 0 4px;font-size:14px;font-family:"Shippori Mincho",serif;display:flex;align-items:center;gap:6px;}
   .card .meta{font-size:11px;color:#666;margin-top:2px;}
-  .card .row{display:flex;justify-content:space-between;align-items:center;gap:6px;flex-wrap:wrap;}
-  .live-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;color:var(--vermilion);font-weight:700;}
+  .card .crow{display:-webkit-flex;display:flex;-webkit-justify-content:space-between;justify-content:space-between;-webkit-align-items:center;align-items:center;gap:6px;-webkit-flex-wrap:wrap;flex-wrap:wrap;}
+  .toilet-counts{font-size:12px;color:var(--ink);margin-top:6px;display:-webkit-flex;display:flex;gap:14px;-webkit-flex-wrap:wrap;flex-wrap:wrap;}
+  .live-badge{display:-webkit-inline-flex;display:inline-flex;-webkit-align-items:center;align-items:center;gap:4px;font-size:10px;color:var(--vermilion);font-weight:700;}
   .live-dot{width:6px;height:6px;border-radius:50%;background:var(--vermilion);animation:pulse 1.4s infinite;}
   @keyframes pulse{0%{opacity:1;}50%{opacity:.25;}100%{opacity:1;}}
   .sched{list-style:none;margin:6px 0 0;padding:0;}
   .sched-day{margin-top:6px;}
-  .sched-day .day-h{
-    font-size:11px;font-weight:700;color:#fff;background:var(--tea-mid);
-    display:inline-block;padding:2px 9px;border-radius:10px;margin-bottom:3px;
-  }
-  .sched li{padding:5px 0 5px 2px;font-size:12px;display:flex;gap:8px;border-bottom:1px dashed var(--line);}
+  .sched-day .day-h{font-size:11px;font-weight:700;color:#fff;background:var(--tea-mid);display:inline-block;padding:2px 9px;border-radius:10px;margin-bottom:3px;}
+  .sched li{padding:5px 0 5px 2px;font-size:12px;display:-webkit-flex;display:flex;gap:8px;border-bottom:1px dashed var(--line);}
   .sched li .t{font-weight:700;color:var(--indigo);min-width:44px;}
   .btn{border:none;border-radius:8px;padding:6px 10px;font-size:11px;cursor:pointer;font-weight:600;}
   .btn-primary{background:var(--tea-deep);color:#fff;}
@@ -73,86 +71,68 @@
   #emptyState{font-size:12px;color:#777;text-align:center;padding:26px 10px;line-height:1.7;}
   .hint{font-size:11px;color:var(--tea-deep);background:var(--tea-pale);border-radius:8px;padding:8px 10px;margin-bottom:10px;line-height:1.6;}
   .schedDayGroup{border:1px solid var(--line);border-radius:10px;padding:8px 8px 4px;margin-bottom:10px;background:#faf8f2;}
-  .schedDayGroup .dayLabel{font-size:11px;font-weight:700;color:var(--tea-deep);margin-bottom:6px;display:flex;align-items:center;gap:6px;}
-  .schedDayGroup .dayLabel input[type="date"]{flex:1;padding:4px 6px;border:1px solid var(--line);border-radius:6px;font-size:12px;}
-  .schedRow{display:flex;gap:6px;margin-bottom:6px;align-items:center;}
-  .schedRow input[type="time"]{flex:0 0 90px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;font-size:12px;}
-  .schedRow input[type="text"]{flex:1;padding:4px 6px;border:1px solid var(--line);border-radius:6px;font-size:12px;font-family:inherit;}
+  .schedDayGroup .dayLabel{font-size:11px;font-weight:700;color:var(--tea-deep);margin-bottom:6px;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;gap:6px;}
+  .schedDayGroup .dayLabel input[type="date"]{-webkit-flex:1;flex:1;padding:4px 6px;border:1px solid var(--line);border-radius:6px;font-size:12px;}
+  .schedRow{display:-webkit-flex;display:flex;gap:6px;margin-bottom:6px;-webkit-align-items:center;align-items:center;}
+  .schedRow input[type="time"]{-webkit-flex:0 0 90px;flex:0 0 90px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;font-size:12px;}
+  .schedRow input[type="text"]{-webkit-flex:1;flex:1;padding:4px 6px;border:1px solid var(--line);border-radius:6px;font-size:12px;font-family:inherit;}
   .placeHint{
-    position:absolute;top:10px;left:50%;transform:translateX(-50%);z-index:950;
+    position:absolute;top:10px;left:50%;-webkit-transform:translateX(-50%);transform:translateX(-50%);z-index:950;
     background:var(--vermilion);color:#fff;padding:8px 16px;border-radius:20px;
     font-size:12px;font-weight:700;box-shadow:var(--shadow);display:none;white-space:nowrap;pointer-events:none;
   }
   #loginOverlay,#addOverlay{
     position:fixed;inset:0;background:rgba(35,40,33,0.55);z-index:2000;display:none;
-    align-items:center;justify-content:center;padding:20px;
+    -webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center;padding:20px;
   }
-  .modal-box{
-    background:#fff;border-radius:16px;padding:22px;width:300px;
-    box-shadow:var(--shadow);max-height:86vh;overflow-y:auto;
-  }
+  .modal-box{background:#fff;border-radius:16px;padding:22px;width:300px;box-shadow:var(--shadow);max-height:86vh;overflow-y:auto;}
   .modal-box h2{font-family:"Shippori Mincho",serif;font-size:16px;margin:0 0 8px;}
   .modal-box p{font-size:12px;color:#666;margin:0 0 12px;}
-  .modal-box input[type="password"],.modal-box input[type="text"],.modal-box input[type="text"]{
-    width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;
-    font-size:13px;margin-bottom:8px;font-family:inherit;
-  }
+  .modal-inp{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;font-size:13px;margin-bottom:8px;font-family:inherit;}
   .modal-box label{font-size:11px;font-weight:700;color:var(--tea-deep);display:block;margin-bottom:3px;}
-  #addName,#addNote{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;font-size:13px;margin-bottom:8px;font-family:inherit;}
-  .modal-row{display:flex;gap:8px;justify-content:flex-end;margin-top:8px;}
+  .modal-row{display:-webkit-flex;display:flex;gap:8px;-webkit-justify-content:flex-end;justify-content:flex-end;margin-top:8px;}
+  .count-row{display:-webkit-flex;display:flex;gap:10px;margin-bottom:8px;}
+  .count-row > div{-webkit-flex:1;flex:1;}
   #loginErr{color:var(--vermilion);font-size:11px;min-height:14px;margin:-4px 0 8px;}
   .leaflet-div-icon{background:none;border:none;}
-  .pin{display:flex;flex-direction:column;align-items:center;transform:translateY(-6px);}
-  .pin .bubble{
-    width:34px;height:34px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);
-    display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow);border:2px solid #fff;
-  }
-  .pin .bubble span{transform:rotate(45deg);font-size:16px;}
+  .pin{display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;-webkit-align-items:center;align-items:center;-webkit-transform:translateY(-6px);transform:translateY(-6px);}
+  .pin .bubble{width:34px;height:34px;border-radius:50% 50% 50% 0;-webkit-transform:rotate(-45deg);transform:rotate(-45deg);display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center;box-shadow:var(--shadow);border:2px solid #fff;}
+  .pin .bubble span{-webkit-transform:rotate(45deg);transform:rotate(45deg);font-size:16px;}
   .pin.dashi .bubble{background:var(--vermilion);}
   .pin.toilet .bubble{background:var(--indigo);}
   .pin.venue .bubble{background:var(--hoji);}
-  .pin .label{
-    margin-top:2px;background:#fff;border-radius:6px;padding:1px 6px;font-size:10px;font-weight:700;
-    box-shadow:0 2px 6px rgba(0,0,0,0.18);max-width:110px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  }
+  .pin .label{margin-top:2px;background:#fff;border-radius:6px;padding:1px 6px;font-size:10px;font-weight:700;box-shadow:0 2px 6px rgba(0,0,0,0.18);max-width:110px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   @media(max-width:720px){
-    #panel{position:fixed;right:0;top:58px;bottom:0;z-index:1400;transform:translateX(100%);transition:transform .25s ease;}
-    #panel.open{transform:translateX(0);}
-    #panelToggle{display:inline-flex !important;}
+    #panel{position:fixed;right:0;top:58px;bottom:0;z-index:1400;-webkit-transform:translateX(100%);transform:translateX(100%);-webkit-transition:-webkit-transform .25s ease;transition:transform .25s ease;}
+    #panel.open{-webkit-transform:translateX(0);transform:translateX(0);}
+    #panelToggle{display:-webkit-inline-flex !important;display:inline-flex !important;}
     header h1{font-size:14px;}
   }
-  #panelToggle{
-    display:none;background:rgba(255,255,255,0.14);color:var(--washi);
-    border:1px solid rgba(255,255,255,0.4);padding:7px 10px;border-radius:20px;font-size:12px;cursor:pointer;
-  }
-  #toast{
-    position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
-    background:#333;color:#fff;padding:8px 18px;border-radius:20px;font-size:12px;
-    opacity:0;transition:opacity .3s;pointer-events:none;z-index:3000;white-space:nowrap;
-  }
+  #panelToggle{display:none;background:rgba(255,255,255,0.14);color:var(--washi);border:1px solid rgba(255,255,255,0.4);padding:7px 10px;border-radius:20px;font-size:12px;cursor:pointer;}
+  #toast{position:fixed;bottom:24px;left:50%;-webkit-transform:translateX(-50%);transform:translateX(-50%);background:#333;color:#fff;padding:8px 18px;border-radius:20px;font-size:12px;opacity:0;-webkit-transition:opacity .3s;transition:opacity .3s;pointer-events:none;z-index:3000;white-space:nowrap;}
   #toast.show{opacity:1;}
 </style>
 </head>
 <body>
 <div id="app">
   <header>
-    <div class="mark">🍵</div>
+    <div class="mark">&#x1F375;</div>
     <div>
-      <h1>金谷 お茶まつり マップ</h1>
-      <div class="sub">島田市金谷 ・ CHAMATSURI LIVE MAP</div>
+      <h1>&#x91D1;&#x8C37; &#x304A;&#x8336;&#x307E;&#x3064;&#x308A; &#x30DE;&#x30C3;&#x30D7;</h1>
+      <div class="sub">&#x5CF6;&#x7530;&#x5E02;&#x91D1;&#x8C37; &#x30FB; CHAMATSURI LIVE MAP</div>
     </div>
     <div class="spacer"></div>
-    <button id="panelToggle" onclick="togglePanel()">一覧 ▾</button>
-    <button id="adminBtn" onclick="onAdminBtn()">管理者ログイン</button>
+    <button id="panelToggle" onclick="togglePanel()">&#x4E00;&#x89A7; &#x25BE;</button>
+    <button id="adminBtn" onclick="onAdminBtn()">&#x7BA1;&#x7406;&#x8005;&#x30ED;&#x30B0;&#x30A4;&#x30F3;</button>
   </header>
   <div id="main">
     <div id="map"></div>
     <div class="placeHint" id="placeHint"></div>
     <div id="panel">
       <div id="tabs">
-        <div class="tab active" data-tab="dashi" onclick="switchTab('dashi')">🏮 山車</div>
-        <div class="tab" data-tab="toilet" onclick="switchTab('toilet')">🚻 トイレ</div>
-        <div class="tab" data-tab="venue" onclick="switchTab('venue')">🎪 会場</div>
+        <div class="tab active" data-tab="dashi" onclick="switchTab('dashi')">&#x1F3EE; &#x5C71;&#x8ECA;</div>
+        <div class="tab" data-tab="toilet" onclick="switchTab('toilet')">&#x1F6BB; &#x30C8;&#x30A4;&#x30EC;</div>
+        <div class="tab" data-tab="venue" onclick="switchTab('venue')">&#x1F3AA; &#x4F1A;&#x5834;</div>
       </div>
       <div id="tabContent"></div>
     </div>
@@ -161,35 +141,39 @@
 
 <div id="loginOverlay">
   <div class="modal-box">
-    <h2>管理者ログイン</h2>
-    <p>山車・トイレ・会場の登録は管理者のみ行えます。合言葉を入力してください。</p>
-    <input type="password" id="loginPin" placeholder="合言葉" autocomplete="off">
+    <h2>&#x7BA1;&#x7406;&#x8005;&#x30ED;&#x30B0;&#x30A4;&#x30F3;</h2>
+    <p>&#x5C71;&#x8ECA;&#x30FB;&#x30C8;&#x30A4;&#x30EC;&#x30FB;&#x4F1A;&#x5834;&#x306E;&#x767B;&#x9332;&#x306F;&#x7BA1;&#x7406;&#x8005;&#x306E;&#x307F;&#x884C;&#x3048;&#x307E;&#x3059;&#x3002;&#x5408;&#x8A00;&#x8449;&#x3092;&#x5165;&#x529B;&#x3057;&#x3066;&#x304F;&#x3060;&#x3055;&#x3044;&#x3002;</p>
+    <input type="password" id="loginPin" class="modal-inp" placeholder="&#x5408;&#x8A00;&#x8449;" autocomplete="off">
     <div id="loginErr"></div>
     <div class="modal-row">
-      <button class="btn btn-outline" onclick="closeLogin()">キャンセル</button>
-      <button class="btn btn-primary" onclick="tryLogin()">ログイン</button>
+      <button class="btn btn-outline" onclick="closeLogin()">&#x30AD;&#x30E3;&#x30F3;&#x30BB;&#x30EB;</button>
+      <button class="btn btn-primary" onclick="tryLogin()">&#x30ED;&#x30B0;&#x30A4;&#x30F3;</button>
     </div>
   </div>
 </div>
 
 <div id="addOverlay">
   <div class="modal-box">
-    <h2 id="addOverlayTitle">登録</h2>
+    <h2 id="addOverlayTitle">&#x767B;&#x9332;</h2>
     <div id="addOverlayBody"></div>
     <div class="modal-row">
-      <button class="btn btn-outline" onclick="cancelAddForm()">キャンセル</button>
-      <button class="btn btn-primary" id="addOverlaySubmit">この内容で登録</button>
+      <button class="btn btn-outline" onclick="cancelAddForm()">&#x30AD;&#x30E3;&#x30F3;&#x30BB;&#x30EB;</button>
+      <button class="btn btn-primary" id="addOverlaySubmit">&#x3053;&#x306E;&#x5185;&#x5BB9;&#x3067;&#x767B;&#x9332;</button>
     </div>
   </div>
 </div>
 
 <div id="toast"></div>
 
-<!-- Firebase SDK -->
+<!-- Leaflet を先に読み込む -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+
+<!-- Firebase SDK (ESM CDN) -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getDatabase, ref, onValue, set, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
+/* ---- Firebase 初期化 ---- */
 const firebaseConfig = {
   apiKey: "AIzaSyAe2xRNccV-_onpOe0hODkzJ92jpwkePHk",
   authDomain: "chamatsuri-map.firebaseapp.com",
@@ -227,18 +211,16 @@ map.setMaxBounds([
   [VIEW_BOUNDS[0][0]-0.005, VIEW_BOUNDS[0][1]-0.006],
   [VIEW_BOUNDS[1][0]+0.005, VIEW_BOUNDS[1][1]+0.006]
 ]);
-
-if (navigator.geolocation){
+if (navigator.geolocation) {
   navigator.geolocation.getCurrentPosition(
-    pos => map.setView([pos.coords.latitude, pos.coords.longitude], 18),
-    ()  => map.fitBounds(VIEW_BOUNDS),
+    function(pos){ map.setView([pos.coords.latitude, pos.coords.longitude], 18); },
+    function(){ map.fitBounds(VIEW_BOUNDS); },
     { enableHighAccuracy:true, timeout:6000, maximumAge:60000 }
   );
 } else {
   map.fitBounds(VIEW_BOUNDS);
 }
-
-map.on('click', e => {
+map.on('click', function(e){
   if (!isAdmin || !placingType) return;
   openAddForm(placingType, e.latlng.lat, e.latlng.lng);
   placingType = null;
@@ -246,69 +228,70 @@ map.on('click', e => {
 });
 
 /* ---- Firebase リアルタイム同期 ---- */
-TYPES.forEach(type => {
-  onValue(ref(db, type), snap => {
+TYPES.forEach(function(type){
+  onValue(ref(db, type), function(snap){
     data[type] = snap.val() || {};
     renderMarkers(type);
     if (currentTab === type) renderTab();
   });
 });
 
-async function saveItem(type, item){
-  await set(ref(db, `${type}/${item.id}`), item);
+function saveItem(type, item){
+  return set(ref(db, type + '/' + item.id), item);
 }
-async function deleteItemDB(type, id){
-  await remove(ref(db, `${type}/${id}`));
+function deleteItemDB(type, id){
+  return remove(ref(db, type + '/' + id));
 }
 
 /* ---- ユーティリティ ---- */
 function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
-function esc(s){ return (s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2500); }
+function esc(s){ return (s||'').replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+function toast(msg){ var t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(function(){ t.classList.remove('show'); }, 2500); }
 function timeAgo(ts){
-  const s=Math.floor((Date.now()-ts)/1000);
-  if(s<60) return `${s}秒前`; if(s<3600) return `${Math.floor(s/60)}分前`; return `${Math.floor(s/3600)}時間前`;
+  var s=Math.floor((Date.now()-ts)/1000);
+  if(s<60) return s+'秒前'; if(s<3600) return Math.floor(s/60)+'分前'; return Math.floor(s/3600)+'時間前';
 }
 function formatDateJp(s){
   if(!s) return '日付未設定';
-  const d=new Date(s+'T00:00:00'); if(isNaN(d)) return s;
-  return `${d.getMonth()+1}/${d.getDate()}（${'日月火水木金土'[d.getDay()]}）`;
+  var d=new Date(s+'T00:00:00'); if(isNaN(d)) return s;
+  return (d.getMonth()+1)+'/'+(d.getDate())+'（'+'日月火水木金土'[d.getDay()]+'）';
 }
 function todayStr(){
-  const d=new Date();
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  var d=new Date();
+  return d.getFullYear()+'-'+(('0'+(d.getMonth()+1)).slice(-2))+'-'+(('0'+d.getDate()).slice(-2));
 }
 function labelOf(t){ return t==='dashi'?'山車':(t==='toilet'?'トイレ':'会場'); }
 
 /* ---- マーカー ---- */
-const ICONS = { dashi:'🏮', toilet:'🚻', venue:'🎪' };
-const iconCache = {};
+var ICONS = { dashi:'🏮', toilet:'🚻', venue:'🎪' };
+var iconCache = {};
 function makeIcon(type, name){
-  const key=`${type}|${name}`;
+  var key = type+'|'+name;
   if(!iconCache[key]){
-    iconCache[key]=L.divIcon({
-      html:`<div class="pin ${type}"><div class="bubble"><span>${ICONS[type]}</span></div><div class="label">${esc(name)}</div></div>`,
+    iconCache[key] = L.divIcon({
+      html: '<div class="pin '+type+'"><div class="bubble"><span>'+ICONS[type]+'</span></div><div class="label">'+esc(name)+'</div></div>',
       iconSize:[34,50], iconAnchor:[17,46]
     });
   }
   return iconCache[key];
 }
 function renderMarkers(type){
-  const ids = new Set(Object.keys(data[type]));
-  Object.keys(markers[type]).forEach(id=>{
-    if(!ids.has(id)){ map.removeLayer(markers[type][id]); delete markers[type][id]; }
+  var ids = {};
+  Object.keys(data[type]).forEach(function(id){ ids[id]=true; });
+  Object.keys(markers[type]).forEach(function(id){
+    if(!ids[id]){ map.removeLayer(markers[type][id]); delete markers[type][id]; }
   });
-  Object.values(data[type]).forEach(item=>{
+  Object.values(data[type]).forEach(function(item){
     if(!item||!item.lat||!item.lng) return;
     if(markers[type][item.id]){
-      const mk=markers[type][item.id];
-      const ll=mk.getLatLng();
+      var mk=markers[type][item.id];
+      var ll=mk.getLatLng();
       if(ll.lat!==item.lat||ll.lng!==item.lng) mk.setLatLng([item.lat,item.lng]);
       if(mk._n!==item.name){ mk.setIcon(makeIcon(type,item.name)); mk._n=item.name; }
     } else {
-      const m=L.marker([item.lat,item.lng],{icon:makeIcon(type,item.name)}).addTo(map);
+      var m=L.marker([item.lat,item.lng],{icon:makeIcon(type,item.name)}).addTo(map);
       m._n=item.name;
-      m.on('click',()=>{ switchTab(type); openPanelMobile(); highlightCard(item.id); });
+      (function(t,id){ m.on('click',function(){ switchTab(t); openPanelMobile(); highlightCard(id); }); })(type,item.id);
       markers[type][item.id]=m;
     }
   });
@@ -317,27 +300,27 @@ function renderMarkers(type){
 /* ---- パネル ---- */
 function switchTab(t){
   currentTab=t;
-  document.querySelectorAll('.tab').forEach(el=>el.classList.toggle('active',el.dataset.tab===t));
+  document.querySelectorAll('.tab').forEach(function(el){ el.classList.toggle('active',el.dataset.tab===t); });
   renderTab();
 }
 function togglePanel(){ document.getElementById('panel').classList.toggle('open'); }
 function openPanelMobile(){ document.getElementById('panel').classList.add('open'); }
 function highlightCard(id){
-  setTimeout(()=>{ const el=document.getElementById('card-'+id); if(el) el.scrollIntoView({behavior:'smooth',block:'center'}); },80);
+  setTimeout(function(){ var el=document.getElementById('card-'+id); if(el) el.scrollIntoView({behavior:'smooth',block:'center'}); },80);
 }
 
 function renderTab(){
-  const c=document.getElementById('tabContent');
-  let html='';
+  var c=document.getElementById('tabContent');
+  var html='';
   if(isAdmin){
-    html+=`<div class="hint">${adminHint(currentTab)}</div>`;
-    html+=`<button class="btn btn-primary" style="width:100%;margin-bottom:10px;" onclick="startPlacing('${currentTab}')">＋ ${labelOf(currentTab)}を地図に追加</button>`;
+    html+='<div class="hint">'+adminHint(currentTab)+'</div>';
+    html+='<button class="btn btn-primary" style="width:100%;margin-bottom:10px;" onclick="startPlacing(\''+currentTab+'\')">+ '+labelOf(currentTab)+'を地図に追加</button>';
   }
-  const list=Object.values(data[currentTab]||{}).filter(Boolean);
+  var list=Object.values(data[currentTab]||{}).filter(Boolean);
   if(!list.length){
-    html+=`<div id="emptyState">まだ${labelOf(currentTab)}の登録がありません。${isAdmin?'上のボタンから追加できます。':'管理者が登録すると表示されます。'}</div>`;
+    html+='<div id="emptyState">まだ'+labelOf(currentTab)+'の登録がありません。'+(isAdmin?'上のボタンから追加できます。':'管理者が登録すると表示されます。')+'</div>';
   } else {
-    list.slice().sort((a,b)=>(a.name||'').localeCompare(b.name||'','ja')).forEach(item=>{ html+=renderCard(currentTab,item); });
+    list.slice().sort(function(a,b){ return (a.name||'').localeCompare(b.name||'','ja'); }).forEach(function(item){ html+=renderCard(currentTab,item); });
   }
   c.innerHTML=html;
 }
@@ -350,153 +333,150 @@ function adminHint(t){
 
 function renderCard(type, item){
   if(!item) return '';
-  const updated=item.updatedAt?timeAgo(item.updatedAt):null;
-  let inner=`<div class="row"><h3>${ICONS[type]} ${esc(item.name)}</h3>`;
-  if(type==='dashi'&&item.live) inner+=`<span class="live-badge"><span class="live-dot"></span>LIVE</span>`;
-  inner+=`</div>`;
-  if(type!=='toilet'&&updated) inner+=`<div class="meta">最終更新: ${updated}</div>`;
-  if(item.note) inner+=`<div class="meta">${esc(item.note)}</div>`;
+  var updated=item.updatedAt?timeAgo(item.updatedAt):null;
+  var inner='<div class="crow"><h3>'+ICONS[type]+' '+esc(item.name)+'</h3>';
+  if(type==='dashi'&&item.live) inner+='<span class="live-badge"><span class="live-dot"></span>LIVE</span>';
+  inner+='</div>';
+  if(type!=='toilet'&&updated) inner+='<div class="meta">最終更新: '+updated+'</div>';
+  if(item.note) inner+='<div class="meta">'+esc(item.note)+'</div>';
   if(type==='toilet'){
-    const m=item.male!=null?item.male:'―';
-    const f=item.female!=null?item.female:'―';
-    inner+=`<div class="meta" style="margin-top:5px;display:flex;gap:12px;">
-      <span>🚹 男性 <strong>${m}</strong> 基</span>
-      <span>🚺 女性 <strong>${f}</strong> 基</span>
-    </div>`;
+    var m=(item.male!==null&&item.male!==undefined)?item.male:'―';
+    var f=(item.female!==null&&item.female!==undefined)?item.female:'―';
+    inner+='<div class="toilet-counts"><span>&#x1F6B9; 男性 <strong>'+m+'</strong> 基</span><span>&#x1F6BA; 女性 <strong>'+f+'</strong> 基</span></div>';
   }
   if(type==='venue'&&item.schedule&&item.schedule.length) inner+=renderSchedGrouped(item.schedule);
   if(isAdmin){
-    inner+=`<div class="row" style="margin-top:8px;gap:6px;">`;
-    inner+=`<button class="btn btn-outline" onclick="focusItem('${type}','${item.id}')">地図で見る</button>`;
+    inner+='<div class="crow" style="margin-top:8px;gap:6px;">';
+    inner+='<button class="btn btn-outline" onclick="focusItem(\''+type+'\',\''+item.id+'\')">地図で見る</button>';
     if(type==='dashi'){
-      inner+=item.live
-        ?`<button class="btn btn-live" onclick="stopLive()">GPS停止</button>`
-        :`<button class="btn btn-outline" onclick="startLive('${item.id}')">GPSで自動更新</button>`;
+      if(item.live){
+        inner+='<button class="btn btn-live" onclick="stopLive()">GPS停止</button>';
+      } else {
+        inner+='<button class="btn btn-outline" onclick="startLive(\''+item.id+'\')">GPSで自動更新</button>';
+      }
     }
-    inner+=`<button class="btn btn-danger" onclick="deleteItem('${type}','${item.id}')">削除</button>`;
-    inner+=`</div>`;
+    inner+='<button class="btn btn-danger" onclick="deleteItem(\''+type+'\',\''+item.id+'\')">削除</button>';
+    inner+='</div>';
   }
-  return `<div class="card" id="card-${item.id}">${inner}</div>`;
+  return '<div class="card" id="card-'+item.id+'">'+inner+'</div>';
 }
 
 function renderSchedGrouped(schedule){
-  const byDate={};
-  schedule.forEach(s=>{ const k=s.date||''; (byDate[k]=byDate[k]||[]).push(s); });
-  return `<div class="sched">`+Object.keys(byDate).sort().map(date=>{
-    const items=byDate[date].slice().sort((a,b)=>(a.time||'').localeCompare(b.time||''));
-    return `<div class="sched-day"><span class="day-h">${formatDateJp(date)}</span>`+
-      `<ul style="list-style:none;margin:2px 0 0;padding:0;">`+
-      items.map(s=>`<li><span class="t">${esc(s.time||'--:--')}</span><span>${esc(s.title||'')}</span></li>`).join('')+
-      `</ul></div>`;
-  }).join('')+`</div>`;
+  var byDate={};
+  schedule.forEach(function(s){ var k=s.date||''; if(!byDate[k]) byDate[k]=[]; byDate[k].push(s); });
+  var html='<div class="sched">';
+  Object.keys(byDate).sort().forEach(function(date){
+    var items=byDate[date].slice().sort(function(a,b){ return (a.time||'').localeCompare(b.time||''); });
+    html+='<div class="sched-day"><span class="day-h">'+formatDateJp(date)+'</span><ul style="list-style:none;margin:2px 0 0;padding:0;">';
+    items.forEach(function(s){ html+='<li><span class="t">'+esc(s.time||'--:--')+'</span><span>'+esc(s.title||'')+'</span></li>'; });
+    html+='</ul></div>';
+  });
+  return html+'</div>';
 }
 
-function focusItem(type,id){
-  const item=data[type][id]; if(item) map.setView([item.lat,item.lng],17);
+function focusItem(type, id){
+  var item=data[type][id]; if(item) map.setView([item.lat,item.lng],17);
 }
 
 /* ---- 登録フォーム ---- */
 function startPlacing(type){
   placingType=type;
-  const hint=document.getElementById('placeHint');
-  hint.textContent=`地図をタップして「${labelOf(type)}」の位置を設定してください`;
+  var hint=document.getElementById('placeHint');
+  hint.textContent='地図をタップして「'+labelOf(type)+'」の位置を設定してください';
   hint.style.display='block';
   if(window.innerWidth<=720) document.getElementById('panel').classList.remove('open');
 }
 
-function openAddForm(type,lat,lng){
-  let extra='';
+function openAddForm(type, lat, lng){
+  var extra='';
   if(type==='toilet'){
-    extra=`<label>設置数</label>
-    <div style="display:flex;gap:10px;margin-bottom:8px;">
-      <div style="flex:1;"><label style="font-size:11px;">🚹 男性（基）</label><input type="number" id="addMale" min="0" placeholder="0" style="width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;font-size:13px;font-family:inherit;"></div>
-      <div style="flex:1;"><label style="font-size:11px;">🚺 女性（基）</label><input type="number" id="addFemale" min="0" placeholder="0" style="width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;font-size:13px;font-family:inherit;"></div>
-    </div>`;
+    extra='<label>設置数</label><div class="count-row">'
+      +'<div><label style="font-size:11px;font-weight:400;">&#x1F6B9; 男性（基）</label>'
+      +'<input type="number" id="addMale" min="0" placeholder="0" class="modal-inp" style="margin-bottom:0;"></div>'
+      +'<div><label style="font-size:11px;font-weight:400;">&#x1F6BA; 女性（基）</label>'
+      +'<input type="number" id="addFemale" min="0" placeholder="0" class="modal-inp" style="margin-bottom:0;"></div>'
+      +'</div><br>';
   }
   if(type==='venue'){
-    extra=`<label>タイムスケジュール</label><div id="schedDays"></div>
-    <button class="btn btn-outline" type="button" onclick="addSchedDay()" style="margin-bottom:8px;margin-top:2px;">＋ 日程を追加</button>`;
+    extra='<label>タイムスケジュール</label><div id="schedDays"></div>'
+      +'<button class="btn btn-outline" type="button" onclick="addSchedDay()" style="margin-bottom:8px;margin-top:2px;">+ 日程を追加</button>';
   }
-  document.getElementById('addOverlayTitle').textContent=`${labelOf(type)}を登録`;
-  document.getElementById('addOverlayBody').innerHTML=`
-    <label>${labelOf(type)}の名前</label>
-    <input type="text" id="addName" placeholder="例：${type==='dashi'?'本町一丁目 山車':(type==='toilet'?'金谷駅前 仮設トイレ':'金谷中央会場')}">
-    <label>補足メモ（任意）</label>
-    <input type="text" id="addNote" placeholder="例：18時〜巡行開始 など">
-    ${extra}`;
-  document.getElementById('addOverlaySubmit').onclick=()=>submitAddForm(type,lat,lng);
+  document.getElementById('addOverlayTitle').textContent=labelOf(type)+'を登録';
+  document.getElementById('addOverlayBody').innerHTML=
+    '<label>'+labelOf(type)+'の名前</label>'
+    +'<input type="text" id="addName" class="modal-inp" placeholder="'+(type==='dashi'?'本町一丁目 山車':(type==='toilet'?'金谷駅前 仮設トイレ':'金谷中央会場'))+'">'
+    +'<label>補足メモ（任意）</label>'
+    +'<input type="text" id="addNote" class="modal-inp" placeholder="例：18時〜巡行開始 など">'
+    +extra;
+  document.getElementById('addOverlaySubmit').onclick=function(){ submitAddForm(type,lat,lng); };
   document.getElementById('addOverlay').style.display='flex';
   if(type==='venue') addSchedDay();
-  setTimeout(()=>document.getElementById('addName').focus(),50);
+  setTimeout(function(){ var el=document.getElementById('addName'); if(el) el.focus(); },50);
 }
 
 function addSchedDay(preset){
-  const wrap=document.getElementById('schedDays'); const gid=uid();
-  wrap.insertAdjacentHTML('beforeend',`
-    <div class="schedDayGroup" id="day-${gid}">
-      <div class="dayLabel">📅&nbsp;<input type="date" class="sched-day-date" value="${preset||todayStr()}">
-        <button class="btn btn-danger" type="button" onclick="document.getElementById('day-${gid}').remove()" style="padding:3px 7px;">削除</button>
-      </div>
-      <div id="rows-${gid}"></div>
-      <button class="btn btn-outline" type="button" onclick="addSchedRow('${gid}')" style="margin-bottom:6px;font-size:11px;">＋ この日に時間を追加</button>
-    </div>`);
+  var wrap=document.getElementById('schedDays'); var gid=uid();
+  wrap.insertAdjacentHTML('beforeend',
+    '<div class="schedDayGroup" id="day-'+gid+'">'
+    +'<div class="dayLabel">&#x1F4C5; <input type="date" class="sched-day-date" value="'+(preset||todayStr())+'">'
+    +'<button class="btn btn-danger" type="button" onclick="document.getElementById(\'day-'+gid+'\').remove()" style="padding:3px 7px;">削除</button>'
+    +'</div>'
+    +'<div id="rows-'+gid+'"></div>'
+    +'<button class="btn btn-outline" type="button" onclick="addSchedRow(&quot;'+gid+'&quot;)" style="margin-bottom:6px;font-size:11px;">+ この日に時間を追加</button>'
+    +'</div>');
   addSchedRow(gid);
 }
 
 function addSchedRow(gid){
-  if(!gid){ const g=document.querySelectorAll('.schedDayGroup'); if(!g.length){addSchedDay();return;} gid=g[g.length-1].id.replace('day-',''); }
-  const rows=document.getElementById('rows-'+gid); const rid=uid();
-  rows.insertAdjacentHTML('beforeend',`
-    <div class="schedRow" id="row-${rid}">
-      <input type="time" class="sched-time">
-      <input type="text" class="sched-title" placeholder="内容（例：お茶娘 演舞）">
-      <button class="btn btn-danger" type="button" onclick="document.getElementById('row-${rid}').remove()" style="padding:3px 7px;">×</button>
-    </div>`);
+  if(!gid){ var g=document.querySelectorAll('.schedDayGroup'); if(!g.length){addSchedDay();return;} gid=g[g.length-1].id.replace('day-',''); }
+  var rows=document.getElementById('rows-'+gid); var rid=uid();
+  rows.insertAdjacentHTML('beforeend',
+    '<div class="schedRow" id="row-'+rid+'">'
+    +'<input type="time" class="sched-time">'
+    +'<input type="text" class="sched-title" placeholder="内容（例：お茶娘 演舞）">'
+    +'<button class="btn btn-danger" type="button" onclick="document.getElementById(\'row-'+rid+'\').remove()" style="padding:3px 7px;">x</button>'
+    +'</div>');
 }
 
 function cancelAddForm(){ document.getElementById('addOverlay').style.display='none'; }
 
-async function submitAddForm(type,lat,lng){
-  const name=document.getElementById('addName').value.trim();
+function submitAddForm(type, lat, lng){
+  var nameEl=document.getElementById('addName');
+  var name=nameEl?nameEl.value.trim():'';
   if(!name){alert('名前を入力してください。');return;}
-  const note=document.getElementById('addNote').value.trim();
-  const item={id:uid(),name,note,lat,lng,updatedAt:Date.now()};
+  var noteEl=document.getElementById('addNote');
+  var note=noteEl?noteEl.value.trim():'';
+  var item={id:uid(),name:name,note:note,lat:lat,lng:lng,updatedAt:Date.now()};
   if(type==='toilet'){
-    const m=document.getElementById('addMale');
-    const f=document.getElementById('addFemale');
-    item.male  = m&&m.value!==''? parseInt(m.value) : null;
-    item.female= f&&f.value!==''? parseInt(f.value) : null;
+    var mEl=document.getElementById('addMale');
+    var fEl=document.getElementById('addFemale');
+    item.male  = (mEl&&mEl.value!=='') ? parseInt(mEl.value,10) : null;
+    item.female= (fEl&&fEl.value!=='') ? parseInt(fEl.value,10) : null;
   }
   if(type==='venue'){
-    const sched=[];
-    document.querySelectorAll('.schedDayGroup').forEach(g=>{
-      const date=g.querySelector('.sched-day-date').value;
-      g.querySelectorAll('.schedRow').forEach(r=>{
-        const time=r.querySelector('.sched-time').value;
-        const title=r.querySelector('.sched-title').value.trim();
-        if(date&&(time||title)) sched.push({date,time,title});
+    var sched=[];
+    document.querySelectorAll('.schedDayGroup').forEach(function(g){
+      var date=g.querySelector('.sched-day-date').value;
+      g.querySelectorAll('.schedRow').forEach(function(r){
+        var time=r.querySelector('.sched-time').value;
+        var title=r.querySelector('.sched-title').value.trim();
+        if(date&&(time||title)) sched.push({date:date,time:time,title:title});
       });
     });
     item.schedule=sched;
   }
-  try{
-    await saveItem(type,item);
-    toast(`${labelOf(type)}を登録しました`);
+  saveItem(type, item).then(function(){
+    toast(labelOf(type)+'を登録しました');
     cancelAddForm();
-  } catch(e){
-    alert('保存に失敗しました。通信環境をご確認ください。');
-  }
+  }).catch(function(){ alert('保存に失敗しました。通信環境をご確認ください。'); });
 }
 
-async function deleteItem(type,id){
+function deleteItem(type, id){
   if(!confirm('この登録を削除しますか？')) return;
   if(type==='dashi'&&liveDashiId===id) stopLive();
-  try{
-    await deleteItemDB(type,id);
+  deleteItemDB(type, id).then(function(){
     toast('削除しました');
-  } catch(e){
-    alert('削除に失敗しました。');
-  }
+  }).catch(function(){ alert('削除に失敗しました。'); });
 }
 
 /* ---- GPS配信 ---- */
@@ -504,24 +484,25 @@ function startLive(id){
   if(!navigator.geolocation){alert('このブラウザは位置情報に対応していません。');return;}
   if(liveWatchId!==null) stopLive();
   liveDashiId=id;
-  liveWatchId=navigator.geolocation.watchPosition(async pos=>{
-    const now=Date.now();
+  liveWatchId=navigator.geolocation.watchPosition(function(pos){
+    var now=Date.now();
     if(now-lastLiveSend<8000) return;
     lastLiveSend=now;
-    const item=data.dashi[id]; if(!item) return;
-    const updated={...item, lat:pos.coords.latitude, lng:pos.coords.longitude, updatedAt:now, live:true};
-    await saveItem('dashi',updated);
-  }, err=>alert('位置情報エラー: '+err.message), {enableHighAccuracy:true,maximumAge:5000,timeout:15000});
-  const item=data.dashi[id];
-  if(item) saveItem('dashi',{...item,live:true});
+    var item=data.dashi[id]; if(!item) return;
+    var updated=Object.assign({},item,{lat:pos.coords.latitude,lng:pos.coords.longitude,updatedAt:now,live:true});
+    saveItem('dashi',updated);
+  }, function(err){ alert('位置情報エラー: '+err.message); },
+  {enableHighAccuracy:true,maximumAge:5000,timeout:15000});
+  var item=data.dashi[id];
+  if(item) saveItem('dashi',Object.assign({},item,{live:true}));
   toast('GPS配信を開始しました');
 }
 
-async function stopLive(){
+function stopLive(){
   if(liveWatchId!==null){navigator.geolocation.clearWatch(liveWatchId);liveWatchId=null;}
   if(liveDashiId){
-    const item=data.dashi[liveDashiId];
-    if(item) await saveItem('dashi',{...item,live:false});
+    var item=data.dashi[liveDashiId];
+    if(item) saveItem('dashi',Object.assign({},item,{live:false}));
   }
   liveDashiId=null;
   toast('GPS配信を停止しました');
@@ -540,7 +521,7 @@ function onAdminBtn(){
     document.getElementById('loginOverlay').style.display='flex';
     document.getElementById('loginPin').value='';
     document.getElementById('loginErr').textContent='';
-    setTimeout(()=>document.getElementById('loginPin').focus(),50);
+    setTimeout(function(){ document.getElementById('loginPin').focus(); },50);
   }
 }
 function closeLogin(){ document.getElementById('loginOverlay').style.display='none'; }
@@ -554,9 +535,9 @@ function tryLogin(){
     document.getElementById('loginErr').textContent='合言葉が違います。';
   }
 }
-document.getElementById('loginPin').addEventListener('keydown',e=>{if(e.key==='Enter')tryLogin();});
+document.getElementById('loginPin').addEventListener('keydown',function(e){ if(e.key==='Enter') tryLogin(); });
 
-/* グローバルに公開（onclick属性から呼ぶため） */
+/* グローバル公開 */
 window.switchTab=switchTab; window.togglePanel=togglePanel;
 window.onAdminBtn=onAdminBtn; window.closeLogin=closeLogin; window.tryLogin=tryLogin;
 window.startPlacing=startPlacing; window.cancelAddForm=cancelAddForm;
@@ -566,6 +547,5 @@ window.startLive=startLive; window.stopLive=stopLive;
 
 renderTab();
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 </body>
 </html>
