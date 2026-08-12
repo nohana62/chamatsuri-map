@@ -111,6 +111,15 @@
   #panelToggle{display:none;background:rgba(255,255,255,0.14);color:var(--washi);border:1px solid rgba(255,255,255,0.4);padding:7px 10px;border-radius:20px;font-size:12px;cursor:pointer;}
   #toast{position:fixed;bottom:24px;left:50%;-webkit-transform:translateX(-50%);transform:translateX(-50%);background:#333;color:#fff;padding:8px 18px;border-radius:20px;font-size:12px;opacity:0;-webkit-transition:opacity .3s;transition:opacity .3s;pointer-events:none;z-index:3000;white-space:nowrap;}
   #toast.show{opacity:1;}
+  #locateBtn{
+    position:absolute;bottom:30px;right:12px;z-index:1000;
+    width:44px;height:44px;border-radius:50%;border:none;cursor:pointer;
+    background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.25);
+    display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center;
+    font-size:22px;-webkit-transition:background .15s;transition:background .15s;
+  }
+  #locateBtn:active{background:var(--tea-pale);}
+  #locateBtn.locating{animation:pulse 1s infinite;}
 </style>
 </head>
 <body>
@@ -127,6 +136,7 @@
   </header>
   <div id="main">
     <div id="map"></div>
+    <button id="locateBtn" onclick="locateMe()" title="現在地へ移動">📍</button>
     <div class="placeHint" id="placeHint"></div>
     <div id="panel">
       <div id="tabs">
@@ -480,6 +490,35 @@ function deleteItem(type, id){
 }
 
 /* ---- GPS配信 ---- */
+var wakeLock = null;
+
+async function acquireWakeLock(){
+  if('wakeLock' in navigator){
+    try{
+      wakeLock = await navigator.wakeLock.request('screen');
+      wakeLock.addEventListener('release', function(){
+        // 画面ロック等で解放された場合、ページが見えていれば再取得
+        if(liveWatchId !== null && !document.hidden){
+          acquireWakeLock();
+        }
+      });
+    } catch(e){
+      // wakeLock非対応でも続行
+    }
+  }
+}
+
+function releaseWakeLock(){
+  if(wakeLock){ wakeLock.release(); wakeLock=null; }
+}
+
+// ページが再び表示されたとき（画面ロック解除・タブ切替後）にwakeLockを再取得
+document.addEventListener('visibilitychange', function(){
+  if(!document.hidden && liveWatchId !== null){
+    acquireWakeLock();
+  }
+});
+
 function startLive(id){
   if(!navigator.geolocation){alert('このブラウザは位置情報に対応していません。');return;}
   if(liveWatchId!==null) stopLive();
@@ -495,6 +534,7 @@ function startLive(id){
   {enableHighAccuracy:true,maximumAge:5000,timeout:15000});
   var item=data.dashi[id];
   if(item) saveItem('dashi',Object.assign({},item,{live:true}));
+  acquireWakeLock();
   toast('GPS配信を開始しました');
 }
 
@@ -505,8 +545,26 @@ function stopLive(){
     if(item) saveItem('dashi',Object.assign({},item,{live:false}));
   }
   liveDashiId=null;
+  releaseWakeLock();
   toast('GPS配信を停止しました');
 }
+
+function locateMe(){
+  if(!navigator.geolocation){ toast('位置情報が使えません'); return; }
+  var btn=document.getElementById('locateBtn');
+  btn.classList.add('locating');
+  btn.textContent='⏳';
+  navigator.geolocation.getCurrentPosition(function(pos){
+    map.setView([pos.coords.latitude, pos.coords.longitude], 18, {animate:true});
+    btn.classList.remove('locating');
+    btn.textContent='📍';
+  }, function(){
+    toast('現在地を取得できませんでした');
+    btn.classList.remove('locating');
+    btn.textContent='📍';
+  }, {enableHighAccuracy:true, timeout:8000, maximumAge:10000});
+}
+window.locateMe=locateMe;
 
 /* ---- 管理者 ---- */
 function onAdminBtn(){
