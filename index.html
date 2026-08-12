@@ -354,8 +354,16 @@ function renderCard(type, item){
   let inner=`<div class="row"><h3>${ICONS[type]} ${esc(item.name)}</h3>`;
   if(type==='dashi'&&item.live) inner+=`<span class="live-badge"><span class="live-dot"></span>LIVE</span>`;
   inner+=`</div>`;
-  if(updated) inner+=`<div class="meta">最終更新: ${updated}</div>`;
+  if(type!=='toilet'&&updated) inner+=`<div class="meta">最終更新: ${updated}</div>`;
   if(item.note) inner+=`<div class="meta">${esc(item.note)}</div>`;
+  if(type==='toilet'){
+    const m=item.male!=null?item.male:'―';
+    const f=item.female!=null?item.female:'―';
+    inner+=`<div class="meta" style="margin-top:5px;display:flex;gap:12px;">
+      <span>🚹 男性 <strong>${m}</strong> 基</span>
+      <span>🚺 女性 <strong>${f}</strong> 基</span>
+    </div>`;
+  }
   if(type==='venue'&&item.schedule&&item.schedule.length) inner+=renderSchedGrouped(item.schedule);
   if(isAdmin){
     inner+=`<div class="row" style="margin-top:8px;gap:6px;">`;
@@ -398,6 +406,13 @@ function startPlacing(type){
 
 function openAddForm(type,lat,lng){
   let extra='';
+  if(type==='toilet'){
+    extra=`<label>設置数</label>
+    <div style="display:flex;gap:10px;margin-bottom:8px;">
+      <div style="flex:1;"><label style="font-size:11px;">🚹 男性（基）</label><input type="number" id="addMale" min="0" placeholder="0" style="width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;font-size:13px;font-family:inherit;"></div>
+      <div style="flex:1;"><label style="font-size:11px;">🚺 女性（基）</label><input type="number" id="addFemale" min="0" placeholder="0" style="width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;font-size:13px;font-family:inherit;"></div>
+    </div>`;
+  }
   if(type==='venue'){
     extra=`<label>タイムスケジュール</label><div id="schedDays"></div>
     <button class="btn btn-outline" type="button" onclick="addSchedDay()" style="margin-bottom:8px;margin-top:2px;">＋ 日程を追加</button>`;
@@ -446,6 +461,12 @@ async function submitAddForm(type,lat,lng){
   if(!name){alert('名前を入力してください。');return;}
   const note=document.getElementById('addNote').value.trim();
   const item={id:uid(),name,note,lat,lng,updatedAt:Date.now()};
+  if(type==='toilet'){
+    const m=document.getElementById('addMale');
+    const f=document.getElementById('addFemale');
+    item.male  = m&&m.value!==''? parseInt(m.value) : null;
+    item.female= f&&f.value!==''? parseInt(f.value) : null;
+  }
   if(type==='venue'){
     const sched=[];
     document.querySelectorAll('.schedDayGroup').forEach(g=>{
