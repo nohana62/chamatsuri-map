@@ -51,6 +51,7 @@
   .tab.active{opacity:1;border-bottom-color:var(--vermilion);}
   #tabContent{flex:1;overflow-y:auto;padding:12px;}
   .card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:11px 12px;margin-bottom:10px;}
+  .card:active{background:var(--tea-pale);}
   .card h3{margin:0 0 4px;font-size:14px;font-family:"Shippori Mincho",serif;display:flex;align-items:center;gap:6px;}
   .card .meta{font-size:11px;color:#666;margin-top:2px;}
   .card .crow{display:-webkit-flex;display:flex;-webkit-justify-content:space-between;justify-content:space-between;-webkit-align-items:center;align-items:center;gap:6px;-webkit-flex-wrap:wrap;flex-wrap:wrap;}
@@ -220,15 +221,14 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 map.setMaxBounds([
   [VIEW_BOUNDS[0][0]-0.005, VIEW_BOUNDS[0][1]-0.006],
   [VIEW_BOUNDS[1][0]+0.005, VIEW_BOUNDS[1][1]+0.006]
-]);
-if (navigator.geolocation) {
+]);if (navigator.geolocation) {
   navigator.geolocation.getCurrentPosition(
     function(pos){ map.setView([pos.coords.latitude, pos.coords.longitude], 18); },
-    function(){ map.fitBounds(VIEW_BOUNDS); },
+    function(){ map.setView(CENTER, 16); },
     { enableHighAccuracy:true, timeout:6000, maximumAge:60000 }
   );
 } else {
-  map.fitBounds(VIEW_BOUNDS);
+  map.setView(CENTER, 16);
 }
 map.on('click', function(e){
   if (!isAdmin || !placingType) return;
@@ -357,18 +357,17 @@ function renderCard(type, item){
   if(type==='venue'&&item.schedule&&item.schedule.length) inner+=renderSchedGrouped(item.schedule);
   if(isAdmin){
     inner+='<div class="crow" style="margin-top:8px;gap:6px;">';
-    inner+='<button class="btn btn-outline" onclick="focusItem(\''+type+'\',\''+item.id+'\')">地図で見る</button>';
     if(type==='dashi'){
       if(item.live){
-        inner+='<button class="btn btn-live" onclick="stopLive()">GPS停止</button>';
+        inner+='<button class="btn btn-live" onclick="event.stopPropagation();stopLive()">GPS停止</button>';
       } else {
-        inner+='<button class="btn btn-outline" onclick="startLive(\''+item.id+'\')">GPSで自動更新</button>';
+        inner+='<button class="btn btn-outline" onclick="event.stopPropagation();startLive(\''+item.id+'\')">GPSで自動更新</button>';
       }
     }
-    inner+='<button class="btn btn-danger" onclick="deleteItem(\''+type+'\',\''+item.id+'\')">削除</button>';
+    inner+='<button class="btn btn-danger" onclick="event.stopPropagation();deleteItem(\''+type+'\',\''+item.id+'\')">削除</button>';
     inner+='</div>';
   }
-  return '<div class="card" id="card-'+item.id+'">'+inner+'</div>';
+  return '<div class="card" id="card-'+item.id+'" onclick="focusItem(\''+type+'\',\''+item.id+'\')" style="cursor:pointer;">'+inner+'</div>';
 }
 
 function renderSchedGrouped(schedule){
@@ -385,7 +384,7 @@ function renderSchedGrouped(schedule){
 }
 
 function focusItem(type, id){
-  var item=data[type][id]; if(item) map.setView([item.lat,item.lng],17);
+  var item=data[type][id]; if(item) map.setView([item.lat,item.lng],19,{animate:true});
 }
 
 /* ---- 登録フォーム ---- */
