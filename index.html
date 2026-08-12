@@ -384,7 +384,13 @@ function renderSchedGrouped(schedule){
 }
 
 function focusItem(type, id){
-  var item=data[type][id]; if(item) map.setView([item.lat,item.lng],19,{animate:true});
+  var item=data[type][id];
+  if(!item) return;
+  map.setView([item.lat,item.lng],19,{animate:true});
+  // スマホではパネルを閉じて地図を見せる
+  if(window.innerWidth<=720){
+    document.getElementById('panel').classList.remove('open');
+  }
 }
 
 /* ---- 登録フォーム ---- */
