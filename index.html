@@ -102,6 +102,12 @@
   .icon-sel-btn{background:#f4f4f4;border:2px solid transparent;border-radius:10px;padding:4px;cursor:pointer;text-align:center;-webkit-transition:border-color .15s;transition:border-color .15s;}
   .icon-sel-btn:active,.icon-sel-btn.selected{border-color:var(--vermilion);background:var(--tea-pale);}
   .pin-img{display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;-webkit-align-items:center;align-items:center;}
+  .marker-live-badge{
+    background:var(--vermilion);color:#fff;font-size:9px;font-weight:700;
+    padding:1px 5px;border-radius:8px;margin-top:2px;
+    display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;gap:3px;
+    box-shadow:0 1px 4px rgba(0,0,0,0.3);
+  }
   #loginErr{color:var(--vermilion);font-size:11px;min-height:14px;margin:-4px 0 8px;}
   .leaflet-div-icon{background:none;border:none;}
   .pin{display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;-webkit-align-items:center;align-items:center;-webkit-transform:translateY(-6px);transform:translateY(-6px);}
@@ -121,6 +127,39 @@
   #panelToggle{display:none;background:rgba(255,255,255,0.14);color:var(--washi);border:1px solid rgba(255,255,255,0.4);padding:7px 10px;border-radius:20px;font-size:12px;cursor:pointer;}
   #toast{position:fixed;bottom:24px;left:50%;-webkit-transform:translateX(-50%);transform:translateX(-50%);background:#333;color:#fff;padding:8px 18px;border-radius:20px;font-size:12px;opacity:0;-webkit-transition:opacity .3s;transition:opacity .3s;pointer-events:none;z-index:3000;white-space:nowrap;}
   #toast.show{opacity:1;}
+  #itemPopup{
+    position:fixed;bottom:0;left:0;right:0;z-index:1500;display:none;
+    -webkit-align-items:flex-end;align-items:flex-end;-webkit-justify-content:center;justify-content:center;
+    background:rgba(35,40,33,0.35);
+    padding:0;
+  }
+  @media(min-width:721px){
+    #itemPopup{left:0;right:320px;-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center;}
+  }
+  #itemPopupBox{
+    background:#fff;border-radius:16px 16px 0 0;width:100%;max-width:480px;
+    padding:16px 16px 24px;box-shadow:var(--shadow);max-height:70vh;overflow-y:auto;
+  }
+  @media(min-width:721px){
+    #itemPopupBox{border-radius:16px;max-width:360px;margin:0 auto;}
+  }
+  #itemPopupHeader{display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-justify-content:space-between;justify-content:space-between;margin-bottom:8px;gap:8px;}
+  #itemPopupTitle{font-family:"Shippori Mincho",serif;font-size:16px;font-weight:700;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;}
+  #itemPopupClose{background:none;border:none;font-size:18px;cursor:pointer;color:#999;padding:4px 6px;line-height:1;flex-shrink:0;}
+  .popup-note{font-size:12px;color:#666;margin-bottom:4px;}
+  .popup-live{font-size:12px;color:var(--vermilion);font-weight:700;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;gap:5px;margin-top:4px;}
+  /* LeafletポップアップのPC向けカスタムスタイル */
+  .chamatsuri-popup .leaflet-popup-content-wrapper{
+    border-radius:12px;box-shadow:var(--shadow);padding:0;overflow:hidden;font-family:"Noto Sans JP",sans-serif;
+  }
+  .chamatsuri-popup .leaflet-popup-content{margin:0;width:auto !important;}
+  .chamatsuri-popup .leaflet-popup-tip-container{margin-top:-1px;}
+  .lp-title{
+    font-family:"Shippori Mincho",serif;font-size:15px;font-weight:700;
+    display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;
+    padding:10px 12px 8px;border-bottom:1px solid var(--line);background:var(--washi);
+  }
+  .lp-body{padding:10px 12px 12px;font-size:12px;min-width:200px;max-width:280px;}
   #locateBtn{
     position:absolute;bottom:30px;right:12px;z-index:1000;
     width:44px;height:44px;border-radius:50%;border:none;cursor:pointer;
@@ -138,6 +177,7 @@
     <div style="min-width:0;overflow:hidden;">
       <h1>お茶まつりマップ</h1>
       <div class="sub">金谷 CHAMATSURI LIVE MAP</div>
+      <div id="liveStatus" style="display:none;-webkit-align-items:center;align-items:center;font-size:10px;font-weight:700;color:#ffcc66;margin-top:2px;letter-spacing:.03em;"></div>
     </div>
     <div class="spacer"></div>
     <button id="panelToggle" onclick="togglePanel()">&#x4E00;&#x89A7; &#x25BE;</button>
@@ -152,7 +192,7 @@
       <div id="tabs">
         <div class="tab active" data-tab="dashi" onclick="switchTab('dashi')">&#x1F3EE; &#x5C71;&#x8ECA;</div>
         <div class="tab" data-tab="toilet" onclick="switchTab('toilet')">&#x1F6BB; &#x30C8;&#x30A4;&#x30EC;</div>
-        <div class="tab" data-tab="venue" onclick="switchTab('venue')">&#x1F3AA; &#x4F1A;&#x5834;</div>
+        <div class="tab" data-tab="venue" onclick="switchTab('venue')">&#x1F3AA; &#x30A4;&#x30D9;&#x30F3;&#x30C8;</div>
       </div>
       <div id="tabContent"></div>
     </div>
@@ -184,6 +224,16 @@
 </div>
 
 <div id="toast"></div>
+
+<div id="itemPopup">
+  <div id="itemPopupBox">
+    <div id="itemPopupHeader">
+      <div id="itemPopupTitle"></div>
+      <button onclick="closeItemPopup()" id="itemPopupClose">&#x2715;</button>
+    </div>
+    <div id="itemPopupBody"></div>
+  </div>
+</div>
 
 <!-- Leaflet を先に読み込む -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -279,7 +329,7 @@ function todayStr(){
   var d=new Date();
   return d.getFullYear()+'-'+(('0'+(d.getMonth()+1)).slice(-2))+'-'+(('0'+d.getDate()).slice(-2));
 }
-function labelOf(t){ return t==='dashi'?'山車':(t==='toilet'?'トイレ':'会場'); }
+function labelOf(t){ return t==='dashi'?'山車':(t==='toilet'?'トイレ':'イベント'); }
 
 /* ---- マーカー ---- */
 var DASHI_ICONS = {
@@ -293,17 +343,18 @@ var DASHI_ICONS = {
 };
 var ICONS = { dashi:'🏮', toilet:'🚻', venue:'🎪' };
 var iconCache = {};
-function makeIcon(type, name, iconKey){
-  var key = type+'|'+name+'|'+(iconKey||'');
+function makeIcon(type, name, iconKey, isLive){
+  var key = type+'|'+name+'|'+(iconKey||'')+'|'+(isLive?'live':'');
   if(!iconCache[key]){
     var html;
+    var liveBadge = isLive ? '<div class="marker-live-badge"><span class="live-dot"></span>LIVE</div>' : '';
     if(type==='dashi' && iconKey && DASHI_ICONS[iconKey]){
       var src = DASHI_ICONS[iconKey].src;
-      html = '<div class="pin-img"><img src="'+src+'" width="34" height="44" style="display:block;"><div class="label" style="margin-top:1px;">'+esc(name)+'</div></div>';
-      iconCache[key] = L.divIcon({html:html, iconSize:[34,56], iconAnchor:[17,52], className:''});
+      html = '<div class="pin-img"><img src="'+src+'" width="34" height="44" style="display:block;">'+liveBadge+'<div class="label" style="margin-top:1px;">'+esc(name)+'</div></div>';
+      iconCache[key] = L.divIcon({html:html, iconSize:[34,68], iconAnchor:[17,64], className:''});
     } else {
-      html = '<div class="pin '+type+'"><div class="bubble"><span>'+ICONS[type]+'</span></div><div class="label">'+esc(name)+'</div></div>';
-      iconCache[key] = L.divIcon({html:html, iconSize:[34,50], iconAnchor:[17,46], className:''});
+      html = '<div class="pin '+type+'"><div class="bubble"><span>'+ICONS[type]+'</span></div>'+liveBadge+'<div class="label">'+esc(name)+'</div></div>';
+      iconCache[key] = L.divIcon({html:html, iconSize:[34,62], iconAnchor:[17,58], className:''});
     }
   }
   return iconCache[key];
@@ -316,21 +367,117 @@ function renderMarkers(type){
   });
   Object.values(data[type]).forEach(function(item){
     if(!item||!item.lat||!item.lng) return;
+    var isLive = type==='dashi' && !!item.live;
     if(markers[type][item.id]){
       var mk=markers[type][item.id];
       var ll=mk.getLatLng();
       if(ll.lat!==item.lat||ll.lng!==item.lng) mk.setLatLng([item.lat,item.lng]);
-      if(mk._n!==item.name||mk._ik!==item.iconKey){ mk.setIcon(makeIcon(type,item.name,item.iconKey)); mk._n=item.name; mk._ik=item.iconKey; }
+      if(mk._n!==item.name||mk._ik!==item.iconKey||mk._live!==isLive){
+        mk.setIcon(makeIcon(type,item.name,item.iconKey,isLive));
+        mk._n=item.name; mk._ik=item.iconKey; mk._live=isLive;
+      }
     } else {
-      var m=L.marker([item.lat,item.lng],{icon:makeIcon(type,item.name,item.iconKey)}).addTo(map);
-      m._n=item.name;
-      (function(t,id){ m.on('click',function(){ switchTab(t); openPanelMobile(); highlightCard(id); }); })(type,item.id);
+      var m=L.marker([item.lat,item.lng],{icon:makeIcon(type,item.name,item.iconKey,isLive)}).addTo(map);
+      m._n=item.name; m._live=isLive;
+      (function(t,id){ m.on('click',function(){ showItemPopup(t, id); }); })(type,item.id);
       markers[type][item.id]=m;
     }
   });
+  // LIVE中の山車数をヘッダーに表示
+  if(type==='dashi') updateLiveStatus();
 }
 
 /* ---- パネル ---- */
+/* ---- マーカータップ時のポップアップ ---- */
+function showItemPopup(type, id){
+  var item = data[type][id];
+  if(!item) return;
+  map.setView([item.lat, item.lng], Math.max(map.getZoom(), 17), {animate:true});
+
+  var iconHtml;
+  if(type==='dashi'&&item.iconKey&&DASHI_ICONS[item.iconKey]){
+    iconHtml='<img src="'+DASHI_ICONS[item.iconKey].src+'" width="36" height="47" style="vertical-align:middle;margin-right:6px;">';
+  } else {
+    iconHtml='<span style="font-size:22px;margin-right:6px;">'+ICONS[type]+'</span>';
+  }
+
+  var body='';
+  if(item.note) body+='<div class="popup-note">'+esc(item.note)+'</div>';
+  if(type==='dashi'&&item.live){
+    body+='<div class="popup-live"><span class="live-dot" style="width:8px;height:8px;"></span> リアルタイム配信中</div>';
+  }
+  if(type==='toilet'){
+    var m2=(item.male!==null&&item.male!==undefined)?item.male:'―';
+    var f2=(item.female!==null&&item.female!==undefined)?item.female:'―';
+    var s2=(item.shared!==null&&item.shared!==undefined)?item.shared:'―';
+    body+='<div class="toilet-counts" style="margin-top:6px;">'
+      +'<span>&#x1F6B9; 男性 <strong>'+m2+'</strong> 基</span>'
+      +'<span>&#x1F6BA; 女性 <strong>'+f2+'</strong> 基</span>'
+      +'<span>&#x1F6BB; 共同 <strong>'+s2+'</strong> 基</span>'
+      +'</div>';
+  }
+  if(type==='venue'&&item.schedule&&item.schedule.length){
+    body+=renderSchedGrouped(item.schedule);
+  }
+
+  var adminBtns='';
+  if(isAdmin){
+    adminBtns='<div style="display:-webkit-flex;display:flex;gap:6px;margin-top:10px;-webkit-flex-wrap:wrap;flex-wrap:wrap;">'
+      +'<button class="btn btn-outline" onclick="closeItemPopup();openEditForm(\''+type+'\',\''+id+'\')">編集</button>';
+    if(type==='dashi'){
+      if(item.live){
+        adminBtns+='<button class="btn btn-live" onclick="closeItemPopup();stopLive()">GPS停止</button>';
+      } else {
+        adminBtns+='<button class="btn btn-outline" onclick="closeItemPopup();startLive(\''+id+'\')">GPSで自動更新</button>';
+      }
+    }
+    adminBtns+='<button class="btn btn-danger" onclick="closeItemPopup();deleteItem(\''+type+'\',\''+id+'\')">削除</button>'
+      +'</div>';
+  }
+
+  var titleHtml = iconHtml+esc(item.name);
+  var contentHtml = body+adminBtns;
+
+  // PC（721px以上）: Leafletネイティブポップアップをマーカー近くに表示
+  if(window.innerWidth > 720){
+    var popup = L.popup({
+      maxWidth: 300,
+      className: 'chamatsuri-popup',
+      closeButton: true,
+      autoClose: true,
+      closeOnClick: false
+    })
+    .setLatLng([item.lat, item.lng])
+    .setContent(
+      '<div class="lp-title">'+titleHtml+'</div>'
+      +'<div class="lp-body">'+contentHtml+'</div>'
+    )
+    .openOn(map);
+  } else {
+    // スマホ: 下部シート
+    document.getElementById('itemPopupTitle').innerHTML=titleHtml;
+    document.getElementById('itemPopupBody').innerHTML=contentHtml;
+    document.getElementById('itemPopup').style.display='flex';
+  }
+}
+function closeItemPopup(){
+  document.getElementById('itemPopup').style.display='none';
+  map.closePopup();
+}
+window.closeItemPopup=closeItemPopup;
+
+function updateLiveStatus(){
+  var liveCount = Object.values(data.dashi).filter(function(i){ return i&&i.live; }).length;
+  var el = document.getElementById('liveStatus');
+  if(!el) return;
+  if(liveCount > 0){
+    el.innerHTML = '<span class="live-dot" style="width:7px;height:7px;display:inline-block;margin-right:4px;"></span>山車 '+liveCount+'台 巡行中';
+    el.style.display = 'inline-flex';
+  } else {
+    el.style.display = 'none';
+  }
+}
+
 function switchTab(t){
   currentTab=t;
   document.querySelectorAll('.tab').forEach(function(el){ el.classList.toggle('active',el.dataset.tab===t); });
@@ -374,7 +521,7 @@ function renderTab(){
 function adminHint(t){
   if(t==='dashi') return '山車を追加後、「GPSで自動更新」をONにすると位置がリアルタイムで全員に反映されます。';
   if(t==='toilet') return 'トイレの位置を登録します。仮設トイレの新設・撤去時も更新してください。';
-  return 'イベント会場を登録し、タイムスケジュールを設定できます。';
+  return 'イベントを登録し、タイムスケジュールを設定できます。';
 }
 
 function renderCard(type, item){
@@ -483,7 +630,7 @@ function openAddForm(type, lat, lng){
   document.getElementById('addOverlayTitle').textContent=labelOf(type)+'を登録';
   document.getElementById('addOverlayBody').innerHTML=
     '<label>'+labelOf(type)+'の名前</label>'
-    +'<input type="text" id="addName" class="modal-inp" placeholder="'+(type==='dashi'?'本町一丁目 山車':(type==='toilet'?'金谷駅前 仮設トイレ':'金谷中央会場'))+'">'
+    +'<input type="text" id="addName" class="modal-inp" placeholder="'+(type==='dashi'?'本町一丁目 山車':(type==='toilet'?'金谷駅前 仮設トイレ':'金谷中央イベント'))+'">'
     +'<label>補足メモ（任意）</label>'
     +'<input type="text" id="addNote" class="modal-inp" placeholder="例：18時〜巡行開始 など">'
     +extra;
