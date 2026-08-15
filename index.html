@@ -115,23 +115,24 @@
   #crosshair{
     position:absolute;top:50%;left:50%;
     -webkit-transform:translate(-50%,-50%);transform:translate(-50%,-50%);
-    width:60px;height:60px;
+    width:80px;height:80px;
   }
-  .ch-h{position:absolute;top:50%;left:0;right:0;height:2px;background:var(--vermilion);margin-top:-1px;}
-  .ch-v{position:absolute;left:50%;top:0;bottom:0;width:2px;background:var(--vermilion);margin-left:-1px;}
-  .ch-dot{position:absolute;top:50%;left:50%;width:8px;height:8px;border-radius:50%;background:var(--vermilion);-webkit-transform:translate(-50%,-50%);transform:translate(-50%,-50%);}
+  .ch-h{position:absolute;top:50%;left:0;right:0;height:2px;background:var(--vermilion);margin-top:-1px;opacity:.85;}
+  .ch-v{position:absolute;left:50%;top:0;bottom:0;width:2px;background:var(--vermilion);margin-left:-1px;opacity:.85;}
+  .ch-dot{position:absolute;top:50%;left:50%;width:10px;height:10px;border-radius:50%;background:var(--vermilion);-webkit-transform:translate(-50%,-50%);transform:translate(-50%,-50%);box-shadow:0 0 0 3px rgba(255,255,255,0.8);}
   #crosshairLabel{
-    position:absolute;top:calc(50% - 46px);left:50%;
+    position:absolute;top:16px;left:50%;
     -webkit-transform:translateX(-50%);transform:translateX(-50%);
-    background:var(--vermilion);color:#fff;font-size:12px;font-weight:700;
-    padding:5px 14px;border-radius:16px;white-space:nowrap;box-shadow:var(--shadow);
+    background:rgba(35,40,33,0.82);color:#fff;font-size:13px;font-weight:700;
+    padding:10px 16px;border-radius:12px;white-space:nowrap;box-shadow:var(--shadow);
+    text-align:center;line-height:1.6;pointer-events:none;
   }
   #crosshairBtns{
-    position:absolute;bottom:24px;left:50%;
+    position:absolute;bottom:32px;left:50%;
     -webkit-transform:translateX(-50%);transform:translateX(-50%);
-    display:-webkit-flex;display:flex;gap:10px;pointer-events:all;
+    display:-webkit-flex;display:flex;gap:12px;pointer-events:all;
   }
-  #crosshairBtns .btn{padding:10px 20px;font-size:13px;box-shadow:var(--shadow);}
+  #crosshairBtns .btn{padding:13px 24px;font-size:14px;box-shadow:var(--shadow);border-radius:12px;}
   #loginErr{color:var(--vermilion);font-size:11px;min-height:14px;margin:-4px 0 8px;}
   .leaflet-div-icon{background:none;border:none;}
   .pin{display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;-webkit-align-items:center;align-items:center;-webkit-transform:translateY(-6px);transform:translateY(-6px);}
@@ -531,7 +532,9 @@ function startCrosshair(type, id){
   crosshairTarget = {type:type, id:id};
   var item = data[type][id];
   if(item) map.setView([item.lat, item.lng], Math.max(map.getZoom(), 17), {animate:true});
-  document.getElementById('crosshairLabel').textContent = '「'+( item?item.name:'') + '」の新しい位置に合わせてください';
+  var label = document.getElementById('crosshairLabel');
+  label.innerHTML = '&#x1F4CC; <strong>'+esc(item?item.name:'')+'</strong> の位置を変更中<br>'
+    +'<span style="font-size:11px;font-weight:400;opacity:.9;">地図を動かして中心の&#xFF0B;を新しい場所に合わせ「ここに決定」を押してください</span>';
   document.getElementById('crosshairOverlay').style.display = 'block';
   map.closePopup();
   document.getElementById('itemPopup').style.display = 'none';
