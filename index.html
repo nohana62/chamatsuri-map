@@ -108,6 +108,30 @@
     display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;gap:3px;
     box-shadow:0 1px 4px rgba(0,0,0,0.3);
   }
+  /* 照準モード */
+  #crosshairOverlay{
+    position:absolute;inset:0;z-index:1200;pointer-events:none;
+  }
+  #crosshair{
+    position:absolute;top:50%;left:50%;
+    -webkit-transform:translate(-50%,-50%);transform:translate(-50%,-50%);
+    width:60px;height:60px;
+  }
+  .ch-h{position:absolute;top:50%;left:0;right:0;height:2px;background:var(--vermilion);margin-top:-1px;}
+  .ch-v{position:absolute;left:50%;top:0;bottom:0;width:2px;background:var(--vermilion);margin-left:-1px;}
+  .ch-dot{position:absolute;top:50%;left:50%;width:8px;height:8px;border-radius:50%;background:var(--vermilion);-webkit-transform:translate(-50%,-50%);transform:translate(-50%,-50%);}
+  #crosshairLabel{
+    position:absolute;top:calc(50% - 46px);left:50%;
+    -webkit-transform:translateX(-50%);transform:translateX(-50%);
+    background:var(--vermilion);color:#fff;font-size:12px;font-weight:700;
+    padding:5px 14px;border-radius:16px;white-space:nowrap;box-shadow:var(--shadow);
+  }
+  #crosshairBtns{
+    position:absolute;bottom:24px;left:50%;
+    -webkit-transform:translateX(-50%);transform:translateX(-50%);
+    display:-webkit-flex;display:flex;gap:10px;pointer-events:all;
+  }
+  #crosshairBtns .btn{padding:10px 20px;font-size:13px;box-shadow:var(--shadow);}
   #loginErr{color:var(--vermilion);font-size:11px;min-height:14px;margin:-4px 0 8px;}
   .leaflet-div-icon{background:none;border:none;}
   .pin{display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;-webkit-align-items:center;align-items:center;-webkit-transform:translateY(-6px);transform:translateY(-6px);}
@@ -186,6 +210,19 @@
   <div id="main">
     <div id="map">
       <button id="locateBtn" onclick="locateMe()" title="現在地へ移動">📍</button>
+      <!-- 照準モードUI -->
+      <div id="crosshairOverlay" style="display:none;">
+        <div id="crosshair">
+          <div class="ch-h"></div>
+          <div class="ch-v"></div>
+          <div class="ch-dot"></div>
+        </div>
+        <div id="crosshairLabel"></div>
+        <div id="crosshairBtns">
+          <button class="btn btn-outline" onclick="cancelCrosshair()" style="background:#fff;">キャンセル</button>
+          <button class="btn btn-primary" onclick="confirmCrosshair()">ここに決定</button>
+        </div>
+      </div>
     </div>
     <div class="placeHint" id="placeHint"></div>
     <div id="panel">
@@ -376,10 +413,30 @@ function renderMarkers(type){
         mk.setIcon(makeIcon(type,item.name,item.iconKey,isLive));
         mk._n=item.name; mk._ik=item.iconKey; mk._live=isLive;
       }
+      mk.dragging[isAdmin ? 'enable' : 'disable']();
     } else {
-      var m=L.marker([item.lat,item.lng],{icon:makeIcon(type,item.name,item.iconKey,isLive)}).addTo(map);
+      var m=L.marker([item.lat,item.lng],{
+        icon:makeIcon(type,item.name,item.iconKey,isLive),
+        draggable: isAdmin
+      }).addTo(map);
       m._n=item.name; m._live=isLive;
-      (function(t,id){ m.on('click',function(){ showItemPopup(t, id); }); })(type,item.id);
+      m._type=type; m._id=item.id;
+      m.on('dragstart', function(){
+        // ドラッグ開始時はクリックを無効化
+        m._dragging=true;
+        showDragToast(item.name);
+      });
+      m.on('dragend', function(e){
+        var latlng=e.target.getLatLng();
+        onMarkerDragEnd(type, item.id, latlng.lat, latlng.lng);
+        setTimeout(function(){ m._dragging=false; }, 200);
+      });
+      (function(t,id,mk2){
+        mk2.on('click',function(){
+          if(mk2._dragging) return;
+          showItemPopup(t, id);
+        });
+      })(type,item.id,m);
       markers[type][item.id]=m;
     }
   });
@@ -423,7 +480,8 @@ function showItemPopup(type, id){
   var adminBtns='';
   if(isAdmin){
     adminBtns='<div style="display:-webkit-flex;display:flex;gap:6px;margin-top:10px;-webkit-flex-wrap:wrap;flex-wrap:wrap;">'
-      +'<button class="btn btn-outline" onclick="closeItemPopup();openEditForm(\''+type+'\',\''+id+'\')">編集</button>';
+      +'<button class="btn btn-outline" onclick="closeItemPopup();openEditForm(\''+type+'\',\''+id+'\')">編集</button>'
+      +'<button class="btn btn-outline" onclick="startCrosshair(\''+type+'\',\''+id+'\')">位置を変更</button>';
     if(type==='dashi'){
       if(item.live){
         adminBtns+='<button class="btn btn-live" onclick="closeItemPopup();stopLive()">GPS停止</button>';
@@ -466,6 +524,49 @@ function closeItemPopup(){
 }
 window.closeItemPopup=closeItemPopup;
 
+/* ---- 照準モード（スマホ対応の位置変更） ---- */
+var crosshairTarget = null; // {type, id}
+
+function startCrosshair(type, id){
+  crosshairTarget = {type:type, id:id};
+  var item = data[type][id];
+  if(item) map.setView([item.lat, item.lng], Math.max(map.getZoom(), 17), {animate:true});
+  document.getElementById('crosshairLabel').textContent = '「'+( item?item.name:'') + '」の新しい位置に合わせてください';
+  document.getElementById('crosshairOverlay').style.display = 'block';
+  map.closePopup();
+  document.getElementById('itemPopup').style.display = 'none';
+  if(window.innerWidth<=720) document.getElementById('panel').classList.remove('open');
+}
+function cancelCrosshair(){
+  crosshairTarget = null;
+  document.getElementById('crosshairOverlay').style.display = 'none';
+}
+function confirmCrosshair(){
+  if(!crosshairTarget) return;
+  var center = map.getCenter();
+  onMarkerDragEnd(crosshairTarget.type, crosshairTarget.id, center.lat, center.lng);
+  cancelCrosshair();
+}
+window.startCrosshair=startCrosshair;
+window.cancelCrosshair=cancelCrosshair;
+window.confirmCrosshair=confirmCrosshair;
+
+function showDragToast(name){
+  var t=document.getElementById('toast');
+  t.textContent='ドラッグして「'+name+'」の位置を変更できます';
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 2000);
+}
+
+function onMarkerDragEnd(type, id, lat, lng){
+  var item = data[type][id];
+  if(!item) return;
+  var updated = Object.assign({}, item, {lat:lat, lng:lng, updatedAt:Date.now()});
+  saveItem(type, updated).then(function(){
+    toast('位置を更新しました');
+  }).catch(function(){ alert('位置の保存に失敗しました。'); });
+}
+
 function updateLiveStatus(){
   var liveCount = Object.values(data.dashi).filter(function(i){ return i&&i.live; }).length;
   var el = document.getElementById('liveStatus');
@@ -494,6 +595,7 @@ function renderTab(){
   var html='';
   if(isAdmin){
     html+='<div class="hint">'+adminHint(currentTab)+'</div>';
+    html+='<div class="hint" style="background:#e8f0e8;">&#x1F4CC; 地図上のアイコンをドラッグすると位置を変更できます</div>';
     html+='<button class="btn btn-primary" style="width:100%;margin-bottom:10px;" onclick="startPlacing(\''+currentTab+'\')">+ '+labelOf(currentTab)+'を地図に追加</button>';
   }
   var list=Object.values(data[currentTab]||{}).filter(Boolean);
@@ -554,6 +656,7 @@ function renderCard(type, item){
   if(isAdmin){
     inner+='<div class="crow" style="margin-top:8px;gap:6px;">';
     inner+='<button class="btn btn-outline" onclick="event.stopPropagation();openEditForm(\''+type+'\',\''+item.id+'\')">編集</button>';
+    inner+='<button class="btn btn-outline" onclick="event.stopPropagation();startCrosshair(\''+type+'\',\''+item.id+'\')">位置</button>';
     if(type==='dashi'){
       if(item.live){
         inner+='<button class="btn btn-live" onclick="event.stopPropagation();stopLive()">GPS停止</button>';
@@ -1011,12 +1114,21 @@ function saveSortOrder(){
 window.selectDashiIcon=selectDashiIcon;
 
 /* ---- 管理者 ---- */
+function updateDraggable(){
+  ['dashi','toilet','venue'].forEach(function(type){
+    Object.values(markers[type]).forEach(function(mk){
+      if(mk.dragging) mk.dragging[isAdmin ? 'enable' : 'disable']();
+    });
+  });
+}
+
 function onAdminBtn(){
   if(isAdmin){
     if(confirm('ログアウトしますか？')){
       isAdmin=false; stopLive();
       document.getElementById('adminBtn').textContent='管理者ログイン';
       document.getElementById('adminBtn').classList.remove('on');
+      updateDraggable();
       renderTab();
     }
   } else {
@@ -1032,7 +1144,7 @@ function tryLogin(){
     isAdmin=true;
     document.getElementById('adminBtn').textContent='ログアウト';
     document.getElementById('adminBtn').classList.add('on');
-    closeLogin(); renderTab();
+    closeLogin(); updateDraggable(); renderTab();
   } else {
     document.getElementById('loginErr').textContent='合言葉が違います。';
   }
